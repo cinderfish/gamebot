@@ -1,0 +1,33 @@
+{
+  "name": "gamebot",
+  "version": "0.1.0",
+  "description": "Slackbot for playing games",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "test": "npm run unit",
+    "lint": "eslint ."
+  },
+  "homepage": "http://github.com/shaunburdick/gamebot",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/shaunburdick/gamebot.git"
+  },
+  "license": "MIT",
+  "engine": {
+    "node": "^5.1.0"
+  },
+  "dependencies": {
+    "botkit": "0.0.4",
+    "istanbul": "^0.4.1",
+    "moment": "^2.10.3",
+    "redact-object": "^1.0.1",
+    "winston": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^4.1.6",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.1.1",
+  }
+}
