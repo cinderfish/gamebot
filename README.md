@@ -1,6 +1,9 @@
 # Slack Gamebot
 A slack bot that plays games with you!
 
+## History
+This bot was originally written as part of a 24 hour hackathon: [HackUpsate vii](http://hackupstate.com/).
+
 ## Games
 The game bot can play the following games:
 
