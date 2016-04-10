@@ -75,3 +75,89 @@ shaunburdick/gamebot:latest
 5. ~Check code coverage `npm run coverage` and add test paths as needed.~
 6. Update the documentation to reflect any changes.
 7. Push to your fork and submit a pull request.
+
+
+## Creating Your Own Game
+The `bot` was created in a way that makes adding your own games pretty easy.  Most of the communication with Slack is abstracted away from you, so all you have to worry about is the game logic and communicating with the player.  To create a new game, first create a new directory in `lib/games/` and add an `index.js`
+
+`mkdir lib/games/my-new-game/ && touch lib/games/my-new-game/index.js`.
+
+Each game is it's own class, the `bot` interface is expecting the following methods to be present:
+
+The `constructor` is the method that is called when the game class is instantiated.  This method is a good spot to initialize your game (set up variables, state, etc).  The `bot` passes in three variables, `map` which contains a map of Slack ID's to users and channels.  This can be used later to look up a users information.  The `map` uses `.get(<some-id>)` to lookup user/channel details.  `bot` is all the information about the bot that instantiated the class such as the bot's name.  It also exposes a `message` method which can be used to push a message from your game out to Slack.  And lastly, the `logger` is an instance of a Winston wrapper that allows you to output debugging and logging info.
+
+```
+/**
+ * Class constructor
+ * @param  {object} map    Map of slack channels and user ids to info
+ * @param  {object} bot    Information about the bot
+ * @param  {Logger} logger Instance of logger utility
+ */
+constructor(map, bot, logger) {
+  ...
+}
+```
+
+Next up is the static `help` method, when a player types `@gamebot help <my-new-game-name>` the bot will run this method and reply with the help text.  This method takes one argument, `bot`, which is the information about the bot that is calling it.  Because the `help` method is static, the class hasn't been instantiated yet and the bot information wouldn't be available without passing it in here.
+
+```
+/**
+ * Static method to return help message that explains how to play the game
+ * @param {object} bot Slack bot information
+ * @return {Promise}   A promise that resolves with a formatted help string
+ */
+static help(bot) {
+  const promise = new Promise((resolve) => {
+    resolve('My help text');
+  });
+
+  return promise;
+}
+```
+
+On to the `start` method, this is what kicks off your game lifecycle.  This is called when a player types `@gamebot play <my-new-game-name>`.  The method takes an argument of `channel` which is information about the channel in which the game was started from.  Here's where you'd update the state of your app.  Two important things in this method are `this.game.end` and `this.game.error`.  The method (and most others) return promises that the bot uses to manage the state of a game.  When the game is finished, the `start` method should resolve it's promise using `this.game.end` which tells the bot that the game is over and tears down the instantiated class.  You can use `this.game.error` at any time your game is running and it experiences an error.
+
+```
+/**
+ * Start game lifecycle
+ * @param {string} channel The channel ID that started the game
+ * @return {Promise}       A promise that will resolve when the game is finished
+ */
+start(channel) {
+  const promise = new Promise((resolve, reject) => {
+    this.game.end = resolve;
+    this.game.error = reject;
+
+    ...
+  });
+}
+```
+
+Next up is the heart of your game, the `handleMessage`.  This method is essentially your game loop.  When a message comes in to the bot from Slack, it dispatches it to any instantiated games.  Your game has to decide if it should respond to those messages.  The method takes a single argument of `message` which contains the message object received from Slack.  You can use things like `message.type` or `message.event` and the `message.text` to determine if your game needs to respond.  This method must return an Promise, if you need to send a message back you can pass text into your resolve and the bot will send a message to Slack.
+
+```
+/**
+ * Handle incoming message
+ * @param  {object} message Message object from Slack RTM api
+ * @param  {object} user    User information
+ * @param  {object} channel Channel information
+ * @return {Promise}        A promise that resolves with an appropriate response
+ */
+handleMessage(message) {
+  ...
+}
+```
+
+And the last bit you need to add to the `index.js` is an export so the bot can include your game and configs.  Note that the `config.name` is what users will have to type to play.  The `config.unique.global` is used to deterine if there should only ever be one instance of your game running Slack wide.  If set to false, your game can be running in multiple channels.
+
+```
+module.exports = {
+  config: {
+    name: '<my-new-game-name>',
+    unique: {
+      global: true,
+    },
+  },
+  Game: <my-new-class-name>,
+};
+```
