@@ -9,6 +9,11 @@
     "test": "npm run unit",
     "lint": "eslint ."
   },
+  "contributors": [
+    "Shaun Burdick <github@shaunburdick.com>",
+    "Trevor Nowalk",
+    "Glenn Allen"
+  ],
   "homepage": "http://github.com/shaunburdick/gamebot",
   "repository": {
     "type": "git",
