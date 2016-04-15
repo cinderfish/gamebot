@@ -17,6 +17,15 @@ In this game, the bot will "hide" in a random room they are present in. Players 
 - A player finds the bot if they are the first to say its name in the correct channel
 - The player with the most "finds" at then end of the rounds wins!
 
+### Hot or Cold
+In this game, the bot will will pick a random number between 1 and 100. Users then try to guess the game and the bot will give them hints based on how close they are.
+
+#### How To Play
+- To start the game use the command `@botname play Hot or Cold`
+- The bot will then announce the game has started
+- Any player is free to guess a number by entering it into the channel
+- The player who correctly guesses the number wins!
+
 ### Math
 In this game, the bot will generate a random simple math problem. The first player to answer the problem correctly wins the round.
 
