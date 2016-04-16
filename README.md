@@ -18,13 +18,22 @@ In this game, the bot will "hide" in a random room they are present in. Players 
 - The player with the most "finds" at then end of the rounds wins!
 
 ### Hot or Cold
-In this game, the bot will will pick a random number between 1 and 100. Users then try to guess the game and the bot will give them hints based on how close they are.
+In this game, the bot will pick a random number between 1 and 100. Users then try to guess the game and the bot will give them hints based on how close they are.
 
 #### How To Play
 - To start the game use the command `@botname play Hot or Cold`
 - The bot will then announce the game has started
 - Any player is free to guess a number by entering it into the channel
 - The player who correctly guesses the number wins!
+
+### Longest Word
+In this game, the bot will pick a random letter. Users then try to come up with the longest word that starts with that letter. The user that picks the longest word first wins!
+
+#### How To Play
+- To start the game use the command `@botname play Longest Word`
+- The bot will then announce the game has started and which letter it has chosen.
+- Any player is free to submit as many words as they would like in the channel.
+- The user that picks the longest word first wins! Ties go to the first user to enter a word of that length.
 
 ### Math
 In this game, the bot will generate a random simple math problem. The first player to answer the problem correctly wins the round.
@@ -65,8 +74,9 @@ Official Image [shaunburdick/gamebot](https://hub.docker.com/r/shaunburdick/game
 
 ### Configuration Environment Variables
 You can set the configuration of the bot by using environment variables. _ENVIRONMENT_VARIABLE_=Default Value
-- _SLACK_TOKEN_=xoxb-foo, Your Slack Token
-- _SLACK_AUTO_RECONNECT_=true, Reconnect on disconnect
+- DICTIONARY_KEY=, An API key from [dictionaryapi.com](http://www.dictionaryapi.com/)
+- SLACK_TOKEN=xoxb-foo, Your Slack Token
+- SLACK_AUTO_RECONNECT=true, Reconnect on disconnect
 
 Set them using the `-e` flag while running docker:
 

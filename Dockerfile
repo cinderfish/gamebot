@@ -3,6 +3,7 @@ FROM node:latest
 MAINTAINER Shaun Burdick <docker@shaunburdick.com>
 
 ENV NODE_ENV=production \
+    DICTIONARY_KEY= \
     SLACK_TOKEN= \
     SLACK_AUTO_RECONNECT=
 

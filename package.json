@@ -24,10 +24,13 @@
     "node": "^5.1.0"
   },
   "dependencies": {
+    "async": "^2.0.0-rc.3",
     "botkit": "^0.0.15",
     "moment": "^2.10.3",
     "redact-object": "^1.0.1",
-    "winston": "^2.1.1"
+    "request": "^2.71.0",
+    "winston": "^2.1.1",
+    "xml2js": "^0.4.16"
   },
   "devDependencies": {
     "eslint": "^2.7.0",
