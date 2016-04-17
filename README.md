@@ -6,6 +6,23 @@ A slack bot that plays games with you!
 ## History
 This bot was originally written as part of a 24 hour hackathon: [HackUpsate vii](http://hackupstate.com/).
 
+- [Games](#games)
+  - [Hide and Seek](#hide-and-seek)
+    - [How To Play](#how-to-play)
+  - [Hot or Cold](#hot-or-cold)
+    - [How To Play](#how-to-play)
+  - [Longest Word](#longest-word)
+    - [How To Play](#how-to-play)
+  - [Math](#math)
+    - [How To Play](#how-to-play)
+- [Help](#help)
+- [Install](#install)
+- [config.js](#configjs)
+- [Docker](#docker)
+  - [Configuration Environment Variables](#configuration-environment-variables)
+- [Contributing](#contributing)
+- [Creating Your Own Game](#creating-your-own-game)
+
 ## Games
 The game bot can play the following games:
 
@@ -30,6 +47,8 @@ In this game, the bot will pick a random number between 1 and 100. Users then tr
 
 ### Longest Word
 In this game, the bot will pick a random letter. Users then try to come up with the longest word that starts with that letter. The user that picks the longest word first wins!
+
+**Note**: An API key from [dictionaryapi.com](http://www.dictionaryapi.com/) is needed for work lookup. You will need to set the DICTIONARY_KEY environmental variable with your key
 
 #### How To Play
 - To start the game use the command `@botname play Longest Word`
@@ -90,12 +109,11 @@ shaunburdick/gamebot:latest
 
 ## Contributing
 1. Create a new branch, please don't work in master directly.
-2. ~Add failing tests for the change you want to make (if appliciable). Run `npm test` to see the tests fail.~
+2. Add failing tests for the change you want to make (if appliciable). Run `npm test` to see the tests fail.
 3. Fix stuff.
-4. ~Run `npm test` to see if the tests pass. Repeat steps 2-4 until done.~
-5. ~Check code coverage `npm run coverage` and add test paths as needed.~
-6. Update the documentation to reflect any changes.
-7. Push to your fork and submit a pull request.
+4. Run `npm test` to see if the tests pass. Repeat steps 2-4 until done.
+5. Update the documentation to reflect any changes.
+6. Push to your fork and submit a pull request.
 
 
 ## Creating Your Own Game
