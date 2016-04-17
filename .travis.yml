@@ -1,4 +1,2 @@
 language: node_js
-node_js:
-  - "5.1"
-script: npm run travis
+after_success: npm run coverage

@@ -1,5 +1,5 @@
 # Slack Gamebot
-[![Build Status](https://travis-ci.org/shaunburdick/gamebot.svg?branch=master)](https://travis-ci.org/shaunburdick/gamebot)
+[![Build Status](https://travis-ci.org/shaunburdick/gamebot.svg?branch=master)](https://travis-ci.org/shaunburdick/gamebot) [![Coverage Status](https://coveralls.io/repos/github/shaunburdick/gamebot/badge.svg?branch=master)](https://coveralls.io/github/shaunburdick/gamebot?branch=master)
 
 A slack bot that plays games with you!
 

@@ -6,9 +6,10 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "npm run unit",
+    "test": "npm run lint && npm run unit",
+    "unit": "nyc --all tape ./test/*.test.js",
     "lint": "eslint .",
-    "travis": "npm run lint"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "contributors": [
     "Shaun Burdick <github@shaunburdick.com>",
@@ -34,7 +35,13 @@
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
+    "coveralls": "^2.11.9",
     "eslint": "^2.7.0",
-    "eslint-config-airbnb": "^6.2.0"
+    "eslint-config-airbnb": "^6.2.0",
+    "nyc": "^6.4.0",
+    "tape": "^4.5.1"
+  },
+  "nyc": {
+    "include": ["lib/**/*.js"]
   }
 }

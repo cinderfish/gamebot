@@ -34,3 +34,6 @@ node_modules
 
 # Local config file
 config.js
+
+# nyc
+.nyc_output
