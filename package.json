@@ -1,13 +1,14 @@
 {
   "name": "gamebot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Slackbot for playing games",
   "main": "app.js",
   "private": true,
   "scripts": {
     "start": "node app.js",
     "test": "npm run unit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "travis": "npm run lint"
   },
   "contributors": [
     "Shaun Burdick <github@shaunburdick.com>",

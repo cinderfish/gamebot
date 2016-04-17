@@ -1,4 +1,6 @@
 # Slack Gamebot
+[![Build Status](https://travis-ci.org/shaunburdick/gamebot.svg?branch=master)](https://travis-ci.org/shaunburdick/gamebot)
+
 A slack bot that plays games with you!
 
 ## History
