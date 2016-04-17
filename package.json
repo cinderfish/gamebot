@@ -42,6 +42,8 @@
     "tape": "^4.5.1"
   },
   "nyc": {
-    "include": ["lib/**/*.js"]
+    "include": [
+      "lib/**/*.js"
+    ]
   }
 }
