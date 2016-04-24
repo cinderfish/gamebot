@@ -3,6 +3,7 @@
   "rules": {
     "strict": 0,
     "valid-jsdoc" : 2,
-    "no-eval": 0
+    "no-eval": 0,
+    "global-require": 0
   }
 }
