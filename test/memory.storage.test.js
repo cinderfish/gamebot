@@ -28,10 +28,12 @@ test('Storage/Memory: Store/Retrieve Stats', (assert) => {
     .then((savedStats) => {
       assert.deepEqual(stats, savedStats, 'Should save stats');
       return mem.getStats(game);
-    }).then((gottenStats) => {
+    })
+    .then((gottenStats) => {
       assert.deepEqual(stats, gottenStats, 'Should fetch stats');
       return mem.setStats(game, newStats);
-    }).then((savedNewSavedStats) => {
+    })
+    .then((savedNewSavedStats) => {
       assert.deepEqual(newStats, savedNewSavedStats, 'Should fetch new overwritten stats');
     });
 
@@ -53,13 +55,16 @@ test('Storage/Memory: Store/Retrieve History', (assert) => {
     .then((res) => {
       assert.ok(res, 'Should save play');
       return mem.getHistory(game);
-    }).then((gottenHistory) => {
+    })
+    .then((gottenHistory) => {
       assert.deepEqual([play], gottenHistory, 'Should fetch history');
       return mem.addPlay(game, play);
-    }).then((res) => {
+    })
+    .then((res) => {
       assert.ok(res, 'Should save play');
       return mem.getHistory(game);
-    }).then((gottenHistory) => {
+    })
+    .then((gottenHistory) => {
       assert.deepEqual([play, play], gottenHistory, 'Should fetch new history');
     });
 
