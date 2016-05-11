@@ -15,8 +15,10 @@ This bot was originally written as part of a 24 hour hackathon: [HackUpsate vii]
     - [How To Play](#how-to-play)
   - [Math](#math)
     - [How To Play](#how-to-play)
+- [Stats](#stats)
 - [Help](#help)
 - [Install](#install)
+- [Data Storage](#data-storage)
 - [config.js](#configjs)
 - [Docker](#docker)
   - [Configuration Environment Variables](#configuration-environment-variables)
@@ -66,6 +68,10 @@ In this game, the bot will generate a random simple math problem. The first play
 - To answer, just say the correct number in the channel.
 - The player with the most correct answers at then end of the rounds wins!
 
+## Stats
+Games have the option of collecting and displaying statistics on games such as tracking winners and records.
+Stats can be persisted to a database using various available drivers.
+
 ## Help
 To get help from the bot, simply type `@botname help`.
 
@@ -75,11 +81,22 @@ To get a list of games, type `@botname play`
 
 To play a game, type `@botname play <game name>`
 
+To get stats on a game, type `@botname stats <game name>`
+
 ## Install
 1. Clone this [repository](https://github.com/shaunburdick/gamebot.git)
 2. `npm install`
 3. Copy `./config.default.js` to `./config.js` and [fill it out](#configjs)
 4. `npm start`
+
+## Data Storage
+The bot can persist stats to various locations. By default stats will be persisted to memory.
+
+### Memory
+The Memory drive will persist the data in the apps memory. This means the stats will be lost if the app is restarted.
+
+**Config**
+None.
 
 ## config.js
 The config file should be filled out as follows:
@@ -87,6 +104,9 @@ The config file should be filled out as follows:
 - slack:
   - token: string, Your slack token
   - autoReconnect: boolean, Reconnect on disconnect
+- storage:
+  - type: string, The driver to use. Defaults to Memory
+  - config: object, any configuration to be passed to the driver
 
 ## Docker
 Build an image using `docker build -t your_image:tag`
@@ -94,10 +114,12 @@ Build an image using `docker build -t your_image:tag`
 Official Image [shaunburdick/gamebot](https://hub.docker.com/r/shaunburdick/gamebot/)
 
 ### Configuration Environment Variables
-You can set the configuration of the bot by using environment variables. _ENVIRONMENT_VARIABLE_=Default Value
+You can set the configuration of the bot by using environment variables. ENVIRONMENT_VARIABLE=Default Value
 - DICTIONARY_KEY=, An API key from [dictionaryapi.com](http://www.dictionaryapi.com/)
 - SLACK_TOKEN=xoxb-foo, Your Slack Token
 - SLACK_AUTO_RECONNECT=true, Reconnect on disconnect
+- STORAGE_TYPE=Memory, The driver to use
+- STORAGE_CONFIG='{json: true}', a json string to be converted to object
 
 Set them using the `-e` flag while running docker:
 
@@ -154,13 +176,13 @@ static help(bot) {
 }
 ```
 
-On to the `start` method, this is what kicks off your game lifecycle.  This is called when a player types `@gamebot play <my-new-game-name>`.  The method takes an argument of `channel` which is information about the channel in which the game was started from.  Here's where you'd update the state of your app.  Two important things in this method are `this.game.end` and `this.game.error`.  The method (and most others) return promises that the bot uses to manage the state of a game.  When the game is finished, the `start` method should resolve it's promise using `this.game.end` which tells the bot that the game is over and tears down the instantiated class.  You can use `this.game.error` at any time your game is running and it experiences an error.
+On to the `start` method, this is what kicks off your game lifecycle.  This is called when a player types `@gamebot play <my-new-game-name>`.  The method takes an argument of `channel` which is information about the channel in which the game was started from.  Here's where you'd update the state of your app.  Two important things in this method are `this.game.end` and `this.game.error`.  The method (and most others) return promises that the bot uses to manage the state of a game.  When the game is finished, the `start` method should resolve it's promise using `this.game.end` which tells the bot that the game is over and tears down the instantiated class.  The promise should resolve with any stats you want to store.  You can use `this.game.error` at any time your game is running and it experiences an error.
 
 ```
 /**
  * Start game lifecycle
  * @param {string} channel The channel ID that started the game
- * @return {Promise}       A promise that will resolve when the game is finished
+ * @return {Promise}       A promise that will resolve when the game is finished with stats
  */
 start(channel) {
   const promise = new Promise((resolve, reject) => {
@@ -183,6 +205,37 @@ Next up is the heart of your game, the `handleMessage`.  This method is essentia
  * @return {Promise}        A promise that resolves with an appropriate response
  */
 handleMessage(message) {
+  ...
+}
+```
+
+The updateStats() function will be called at the end of every game. This allows your game to update any global/channel stats with new values from the last play. The function gets the current stats, the game history and the last play. It expects you to return the new stats object which will be saved over the previous stats. This function keeps you from having to build stats from the history every time.
+
+```
+/**
+ * Updates the stats for the Game
+ * @param {object}   stats    The previous stats object
+ * @param {object[]} history  The game's stored history
+ * @param {object}   lastPlay The last play through
+ * @return {Promise} A promise that resolves with the new stats object to be stored
+ */
+updateStats(stats, history, lastPlay) {
+  ...
+}
+```
+
+The formatStats() function is called when a user asks for stats from your game. The function will be passed the latest stored stats object, what channel the call originated, and a new lookup object so you can map ids to users/channels. The bot expects your game to return a formatted string it can then send to slack as your representation of stats.
+
+```
+/**
+ * Format the stats into a message
+ *
+ * @param {object} stats   the stats to format
+ * @param {string} channel the stats to format
+ * @param {Map}    lookup  A lookup map if needed
+ * @return {string} the formated message
+ */
+static formatStats(stats, channel) {
   ...
 }
 ```

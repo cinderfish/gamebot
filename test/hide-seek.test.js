@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('tape');
-const HotColdGame = require(`${process.env.PWD}/lib/games/hot-cold`);
+const HideSeekGame = require(`${process.env.PWD}/lib/games/hide-seek`);
 const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
@@ -18,151 +18,39 @@ const mockBot = {
   },
 };
 
-test('Hot / Cold: Should instantiate game', (assert) => {
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
+test('Hide and Seek: Should instantiate game', (assert) => {
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
   assert.ok(game);
   assert.deepEqual(game.bot, mockBot, 'Mock bot stored as bot');
   assert.end();
 });
 
-test('Hot / Cold: Show Help', (assert) => {
+test('Hide and Seek: Show Help', (assert) => {
   assert.plan(1);
 
-  HotColdGame.Game.help(mockBot.self)
+  HideSeekGame.Game.help(mockBot.self)
     .then((help) => {
       assert.equal(typeof help, 'string', 'Help should return a string');
     });
 });
 
-test('Hot / Cold: Should pick a random number', (assert) => {
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-  assert.ok(game.game.answer > 0, 'Random number should be greater than 0');
-  assert.ok(game.game.answer < 101, 'Random number should be less than 101');
+test('Hide and Seek: Generate ID', (assert) => {
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  assert.notEqual(game.generateId(), game.generateId(), 'Generate unique ids');
   assert.end();
-
-  game.end(); // Get the promise to resolve
 });
 
-test('Hot / Cold: Respond to guess', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  const guess = game.game.answer - 1;
-  game.handleMessage({
-    text: guess,
-  }).then((response) => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-    assert.equal(response, `${guess} is Red Hot!`);
-  });
+test('Hide and Seek: Get Response', (assert) => {
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  assert.ok(game.getResponse('foo').length, 'Response should have length');
+  assert.end();
 });
 
-test('Hot / Cold: Respond to close guess', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  const guess = game.game.answer - 6;
-  game.handleMessage({
-    text: guess,
-  }).then((response) => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-    assert.equal(response, `${guess} is Hot!`);
-  });
-});
-
-test('Hot / Cold: Respond to close guess', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  const guess = game.game.answer - 11;
-  game.handleMessage({
-    text: guess,
-  }).then((response) => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-    assert.equal(response, `${guess} is Warm!`);
-  });
-});
-
-test('Hot / Cold: Respond to close-ish guess', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  const guess = game.game.answer - 21;
-  game.handleMessage({
-    text: guess,
-  }).then((response) => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-    assert.equal(response, `${guess} is Cold!`);
-  });
-});
-
-test('Hot / Cold: Respond to way off guess', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  const guess = game.game.answer - 31;
-  game.handleMessage({
-    text: guess,
-  }).then((response) => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-    assert.equal(response, `${guess} is Freezing Cold!`);
-  });
-});
-
-test('Hot / Cold: Ignore non-numeric answer', (assert) => {
-  assert.plan(1);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start();
-
-  game.handleMessage({
-    text: 'foo',
-  }).then(() => {
-    assert.fail('Should not have gotten a response');
-  });
-
-  assert.pass('No response given');
-});
-
-test('Hot / Cold: Detect correct answer', (assert) => {
-  assert.plan(2);
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
-
-  game.start({
-    channel: 'foo',
-  }).then(() => {
-    assert.pass('Game was completed');
-  }).catch((err) => {
-    logger.error(err);
-  });
-
-  game.handleMessage({
-    text: game.game.answer,
-  }, {
-    profile: {
-      real_name: 'foo',
-    },
-  }).then(() => {
-    assert.equal(game.game.guesses, 1, 'Increment Guesses');
-  });
-});
-
-test('Hot / Cold: Update stats creates initial stat', (assert) => {
+test('Hide and Seek: Update stats creates initial stat', (assert) => {
   assert.plan(1);
   const stats = {};
   const lastPlay = {
-    stats: { winner: 'U00000000', guesses: 5 },
+    stats: { winner: 'U00000000', score: 15 },
     start: 1461979341406,
     finish: 1461979371859,
     channel: 'C00000000',
@@ -173,11 +61,13 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
     global: {
       plays: 1,
       records: {
-        longest: {
-          guesses: 5,
+        highest: {
+          score: 15,
+          user: 'U00000000',
         },
-        shortest: {
-          guesses: 5,
+        lowest: {
+          score: 15,
+          user: 'U00000000',
         },
       },
       wins: [
@@ -188,11 +78,13 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
       C00000000: {
         plays: 1,
         records: {
-          longest: {
-            guesses: 5,
+          highest: {
+            score: 15,
+            user: 'U00000000',
           },
-          shortest: {
-            guesses: 5,
+          lowest: {
+            score: 15,
+            user: 'U00000000',
           },
         },
         wins: [
@@ -202,19 +94,19 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
     },
   };
 
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
   game.updateStats(stats, history, lastPlay)
     .then((newStats) => {
       assert.deepEqual(newStats, expectedStats, 'Initialize stats with first win');
     });
 });
 
-test('Hot / Cold: Update stats', (assert) => {
+test('Hide and Seek: Update stats', (assert) => {
   assert.plan(4);
   const plays = [
     {
       play: {
-        stats: { winner: 'U00000000', guesses: 5 },
+        stats: { winner: 'U00000000', score: 15 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
@@ -224,11 +116,13 @@ test('Hot / Cold: Update stats', (assert) => {
         global: {
           plays: 1,
           records: {
-            longest: {
-              guesses: 5,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 5,
+            lowest: {
+              score: 15,
+              user: 'U00000000',
             },
           },
           wins: [
@@ -239,11 +133,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000000: {
             plays: 1,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 5,
+              lowest: {
+                score: 15,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -255,7 +151,7 @@ test('Hot / Cold: Update stats', (assert) => {
     },
     {
       play: {
-        stats: { winner: 'U00000001', guesses: 3 },
+        stats: { winner: 'U00000001', score: 6 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
@@ -265,11 +161,13 @@ test('Hot / Cold: Update stats', (assert) => {
         global: {
           plays: 2,
           records: {
-            longest: {
-              guesses: 5,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -281,11 +179,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -298,7 +198,7 @@ test('Hot / Cold: Update stats', (assert) => {
     },
     {
       play: {
-        stats: { winner: 'U00000000', guesses: 7 },
+        stats: { winner: 'U00000000', score: 10 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
@@ -308,11 +208,13 @@ test('Hot / Cold: Update stats', (assert) => {
         global: {
           plays: 3,
           records: {
-            longest: {
-              guesses: 7,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -324,11 +226,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -339,11 +243,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000001: {
             plays: 1,
             records: {
-              longest: {
-                guesses: 7,
+              highest: {
+                score: 10,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 7,
+              lowest: {
+                score: 10,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -365,11 +271,13 @@ test('Hot / Cold: Update stats', (assert) => {
         global: {
           plays: 4,
           records: {
-            longest: {
-              guesses: 7,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -381,11 +289,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -396,11 +306,13 @@ test('Hot / Cold: Update stats', (assert) => {
           C00000001: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 7,
+              highest: {
+                score: 10,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 7,
+              lowest: {
+                score: 10,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -412,7 +324,7 @@ test('Hot / Cold: Update stats', (assert) => {
     },
   ];
 
-  const game = new HotColdGame.Game(lookup, mockBot, logger);
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
   game.updateStats({}, [], plays[0].play)
     .then((newStats) => {
       assert.deepEqual(newStats, plays[0].expected, 'Initialize stats with first win');
@@ -431,16 +343,18 @@ test('Hot / Cold: Update stats', (assert) => {
     });
 });
 
-test('Hot / Cold: Format stats', (assert) => {
+test('Hide and Seek: Format stats', (assert) => {
   const stats = {
     global: {
       plays: 22,
       records: {
-        longest: {
-          guesses: 7,
+        highest: {
+          score: 15,
+          user: 'U00000000',
         },
-        shortest: {
-          guesses: 3,
+        lowest: {
+          score: 6,
+          user: 'U00000001',
         },
       },
       wins: [
@@ -456,51 +370,52 @@ test('Hot / Cold: Format stats', (assert) => {
       C00000000: {
         plays: 22,
         records: {
-          longest: {
-            guesses: 7,
+          highest: {
+            score: 10,
+            user: 'U00000000',
           },
-          shortest: {
-            guesses: 3,
+          lowest: {
+            score: 10,
+            user: 'U00000001',
           },
         },
         wins: [
-          { user: 'U00000001', wins: 4 },
-          { user: 'U00000002', wins: 3 },
+          { user: 'U00000005', wins: 1 },
         ],
       },
     },
   };
 
-  const noStatsFormat = `There are no stats for ${HotColdGame.config.name}! ` +
+  const noStatsFormat = `There are no stats for ${HideSeekGame.config.name}! ` +
     'Play the game to create some!';
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *15* (<@U00000000>)\n' +
+    'Lowest Score: *6* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
     '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *10* (<@U00000000>)\n' +
+    'Lowest Score: *10* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000001>: 4\n<@U00000002>: 3\n\n' +
+    '<@U00000005>: 1\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *15* (<@U00000000>)\n' +
+    'Lowest Score: *6* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
     '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
 
-  assert.equal(HotColdGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
+  assert.equal(HideSeekGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
   assert.equal(
-    HotColdGame.Game.formatStats(stats, 'C00000001'),
+    HideSeekGame.Game.formatStats(stats, 'C00000001'),
     nonChannelFormat, 'Format non-channel stats correctly'
   );
   assert.equal(
-    HotColdGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
+    HideSeekGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
   );
   assert.end();
 });
