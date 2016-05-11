@@ -15,8 +15,10 @@ This bot was originally written as part of a 24 hour hackathon: [HackUpsate vii]
     - [How To Play](#how-to-play)
   - [Math](#math)
     - [How To Play](#how-to-play)
+- [Stats](#stats)
 - [Help](#help)
 - [Install](#install)
+- [Data Storage](#data-storage)
 - [config.js](#configjs)
 - [Docker](#docker)
   - [Configuration Environment Variables](#configuration-environment-variables)
@@ -66,6 +68,10 @@ In this game, the bot will generate a random simple math problem. The first play
 - To answer, just say the correct number in the channel.
 - The player with the most correct answers at then end of the rounds wins!
 
+## Stats
+Games have the option of collecting and displaying statistics on games such as tracking winners and records.
+Stats can be persisted to a database using various available drivers.
+
 ## Help
 To get help from the bot, simply type `@botname help`.
 
@@ -75,11 +81,22 @@ To get a list of games, type `@botname play`
 
 To play a game, type `@botname play <game name>`
 
+To get stats on a game, type `@botname stats <game name>`
+
 ## Install
 1. Clone this [repository](https://github.com/shaunburdick/gamebot.git)
 2. `npm install`
 3. Copy `./config.default.js` to `./config.js` and [fill it out](#configjs)
 4. `npm start`
+
+## Data Storage
+The bot can persist stats to various locations. By default stats will be persisted to memory.
+
+### Memory
+The Memory drive will persist the data in the apps memory. This means the stats will be lost if the app is restarted.
+
+**Config**
+None.
 
 ## config.js
 The config file should be filled out as follows:
@@ -87,6 +104,9 @@ The config file should be filled out as follows:
 - slack:
   - token: string, Your slack token
   - autoReconnect: boolean, Reconnect on disconnect
+- storage:
+  - type: string, The driver to use. Defaults to Memory
+  - config: object, any configuration to be passed to the driver
 
 ## Docker
 Build an image using `docker build -t your_image:tag`
@@ -94,10 +114,12 @@ Build an image using `docker build -t your_image:tag`
 Official Image [shaunburdick/gamebot](https://hub.docker.com/r/shaunburdick/gamebot/)
 
 ### Configuration Environment Variables
-You can set the configuration of the bot by using environment variables. _ENVIRONMENT_VARIABLE_=Default Value
+You can set the configuration of the bot by using environment variables. ENVIRONMENT_VARIABLE=Default Value
 - DICTIONARY_KEY=, An API key from [dictionaryapi.com](http://www.dictionaryapi.com/)
 - SLACK_TOKEN=xoxb-foo, Your Slack Token
 - SLACK_AUTO_RECONNECT=true, Reconnect on disconnect
+- STORAGE_TYPE=Memory, The driver to use
+- STORAGE_CONFIG='{json: true}', a json string to be converted to object
 
 Set them using the `-e` flag while running docker:
 

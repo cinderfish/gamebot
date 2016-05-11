@@ -73,3 +73,37 @@ test('Storage/Memory: Store/Retrieve History', (assert) => {
       assert.deepEqual(noHistory, [], 'Should get empty array when there is no history');
     });
 });
+
+test('Storage/Memory: Delete a game', (assert) => {
+  assert.plan(3);
+  const game = 'foo';
+  const play = {
+    foo: 'bar',
+  };
+  const stats = {
+    foo: 'bar',
+  };
+
+  const mem = new Memory();
+  Promise.all([
+    mem.addPlay(game, play),
+    mem.setStats(game, stats),
+  ])
+    .then(() => mem.deleteGame(game))
+    .then((res) => {
+      assert.ok(res, 'Delete should return truthy value');
+      return Promise.all([
+        mem.getStats(game),
+        mem.getHistory(game),
+      ]);
+    })
+    .then((res) => {
+      res.forEach((item) => {
+        if (Array.isArray(item)) {
+          assert.deepEqual(item, [], 'History should be empty');
+        } else {
+          assert.deepEqual(item, {}, 'Stats should be empty');
+        }
+      });
+    });
+});
