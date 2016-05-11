@@ -176,13 +176,13 @@ static help(bot) {
 }
 ```
 
-On to the `start` method, this is what kicks off your game lifecycle.  This is called when a player types `@gamebot play <my-new-game-name>`.  The method takes an argument of `channel` which is information about the channel in which the game was started from.  Here's where you'd update the state of your app.  Two important things in this method are `this.game.end` and `this.game.error`.  The method (and most others) return promises that the bot uses to manage the state of a game.  When the game is finished, the `start` method should resolve it's promise using `this.game.end` which tells the bot that the game is over and tears down the instantiated class.  You can use `this.game.error` at any time your game is running and it experiences an error.
+On to the `start` method, this is what kicks off your game lifecycle.  This is called when a player types `@gamebot play <my-new-game-name>`.  The method takes an argument of `channel` which is information about the channel in which the game was started from.  Here's where you'd update the state of your app.  Two important things in this method are `this.game.end` and `this.game.error`.  The method (and most others) return promises that the bot uses to manage the state of a game.  When the game is finished, the `start` method should resolve it's promise using `this.game.end` which tells the bot that the game is over and tears down the instantiated class.  The promise should resolve with any stats you want to store.  You can use `this.game.error` at any time your game is running and it experiences an error.
 
 ```
 /**
  * Start game lifecycle
  * @param {string} channel The channel ID that started the game
- * @return {Promise}       A promise that will resolve when the game is finished
+ * @return {Promise}       A promise that will resolve when the game is finished with stats
  */
 start(channel) {
   const promise = new Promise((resolve, reject) => {
@@ -205,6 +205,37 @@ Next up is the heart of your game, the `handleMessage`.  This method is essentia
  * @return {Promise}        A promise that resolves with an appropriate response
  */
 handleMessage(message) {
+  ...
+}
+```
+
+The updateStats() function will be called at the end of every game. This allows your game to update any global/channel stats with new values from the last play. The function gets the current stats, the game history and the last play. It expects you to return the new stats object which will be saved over the previous stats. This function keeps you from having to build stats from the history every time.
+
+```
+/**
+ * Updates the stats for the Game
+ * @param {object}   stats    The previous stats object
+ * @param {object[]} history  The game's stored history
+ * @param {object}   lastPlay The last play through
+ * @return {Promise} A promise that resolves with the new stats object to be stored
+ */
+updateStats(stats, history, lastPlay) {
+  ...
+}
+```
+
+The formatStats() function is called when a user asks for stats from your game. The function will be passed the latest stored stats object, what channel the call originated, and a new lookup object so you can map ids to users/channels. The bot expects your game to return a formatted string it can then send to slack as your representation of stats.
+
+```
+/**
+ * Format the stats into a message
+ *
+ * @param {object} stats   the stats to format
+ * @param {string} channel the stats to format
+ * @param {Map}    lookup  A lookup map if needed
+ * @return {string} the formated message
+ */
+static formatStats(stats, channel) {
   ...
 }
 ```

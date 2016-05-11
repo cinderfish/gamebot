@@ -33,12 +33,24 @@ test('Hide and Seek: Show Help', (assert) => {
       assert.equal(typeof help, 'string', 'Help should return a string');
     });
 });
-/*
+
+test('Hide and Seek: Generate ID', (assert) => {
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  assert.notEqual(game.generateId(), game.generateId(), 'Generate unique ids');
+  assert.end();
+});
+
+test('Hide and Seek: Get Response', (assert) => {
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  assert.ok(game.getResponse('foo').length, 'Response should have length');
+  assert.end();
+});
+
 test('Hide and Seek: Update stats creates initial stat', (assert) => {
   assert.plan(1);
   const stats = {};
   const lastPlay = {
-    stats: { winner: 'U00000000', guesses: 5 },
+    stats: { winner: 'U00000000', score: 15 },
     start: 1461979341406,
     finish: 1461979371859,
     channel: 'C00000000',
@@ -49,11 +61,13 @@ test('Hide and Seek: Update stats creates initial stat', (assert) => {
     global: {
       plays: 1,
       records: {
-        longest: {
-          guesses: 5,
+        highest: {
+          score: 15,
+          user: 'U00000000',
         },
-        shortest: {
-          guesses: 5,
+        lowest: {
+          score: 15,
+          user: 'U00000000',
         },
       },
       wins: [
@@ -64,11 +78,13 @@ test('Hide and Seek: Update stats creates initial stat', (assert) => {
       C00000000: {
         plays: 1,
         records: {
-          longest: {
-            guesses: 5,
+          highest: {
+            score: 15,
+            user: 'U00000000',
           },
-          shortest: {
-            guesses: 5,
+          lowest: {
+            score: 15,
+            user: 'U00000000',
           },
         },
         wins: [
@@ -90,7 +106,7 @@ test('Hide and Seek: Update stats', (assert) => {
   const plays = [
     {
       play: {
-        stats: { winner: 'U00000000', guesses: 5 },
+        stats: { winner: 'U00000000', score: 15 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
@@ -100,11 +116,13 @@ test('Hide and Seek: Update stats', (assert) => {
         global: {
           plays: 1,
           records: {
-            longest: {
-              guesses: 5,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 5,
+            lowest: {
+              score: 15,
+              user: 'U00000000',
             },
           },
           wins: [
@@ -115,11 +133,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000000: {
             plays: 1,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 5,
+              lowest: {
+                score: 15,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -131,7 +151,7 @@ test('Hide and Seek: Update stats', (assert) => {
     },
     {
       play: {
-        stats: { winner: 'U00000001', guesses: 3 },
+        stats: { winner: 'U00000001', score: 6 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
@@ -141,11 +161,13 @@ test('Hide and Seek: Update stats', (assert) => {
         global: {
           plays: 2,
           records: {
-            longest: {
-              guesses: 5,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -157,11 +179,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -174,7 +198,7 @@ test('Hide and Seek: Update stats', (assert) => {
     },
     {
       play: {
-        stats: { winner: 'U00000000', guesses: 7 },
+        stats: { winner: 'U00000000', score: 10 },
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
@@ -184,11 +208,13 @@ test('Hide and Seek: Update stats', (assert) => {
         global: {
           plays: 3,
           records: {
-            longest: {
-              guesses: 7,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -200,11 +226,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -215,11 +243,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000001: {
             plays: 1,
             records: {
-              longest: {
-                guesses: 7,
+              highest: {
+                score: 10,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 7,
+              lowest: {
+                score: 10,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -241,11 +271,13 @@ test('Hide and Seek: Update stats', (assert) => {
         global: {
           plays: 4,
           records: {
-            longest: {
-              guesses: 7,
+            highest: {
+              score: 15,
+              user: 'U00000000',
             },
-            shortest: {
-              guesses: 3,
+            lowest: {
+              score: 6,
+              user: 'U00000001',
             },
           },
           wins: [
@@ -257,11 +289,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000000: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 5,
+              highest: {
+                score: 15,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 3,
+              lowest: {
+                score: 6,
+                user: 'U00000001',
               },
             },
             wins: [
@@ -272,11 +306,13 @@ test('Hide and Seek: Update stats', (assert) => {
           C00000001: {
             plays: 2,
             records: {
-              longest: {
-                guesses: 7,
+              highest: {
+                score: 10,
+                user: 'U00000000',
               },
-              shortest: {
-                guesses: 7,
+              lowest: {
+                score: 10,
+                user: 'U00000000',
               },
             },
             wins: [
@@ -312,11 +348,13 @@ test('Hide and Seek: Format stats', (assert) => {
     global: {
       plays: 22,
       records: {
-        longest: {
-          guesses: 7,
+        highest: {
+          score: 15,
+          user: 'U00000000',
         },
-        shortest: {
-          guesses: 3,
+        lowest: {
+          score: 6,
+          user: 'U00000001',
         },
       },
       wins: [
@@ -332,16 +370,17 @@ test('Hide and Seek: Format stats', (assert) => {
       C00000000: {
         plays: 22,
         records: {
-          longest: {
-            guesses: 7,
+          highest: {
+            score: 10,
+            user: 'U00000000',
           },
-          shortest: {
-            guesses: 3,
+          lowest: {
+            score: 10,
+            user: 'U00000001',
           },
         },
         wins: [
-          { user: 'U00000001', wins: 4 },
-          { user: 'U00000002', wins: 3 },
+          { user: 'U00000005', wins: 1 },
         ],
       },
     },
@@ -352,21 +391,21 @@ test('Hide and Seek: Format stats', (assert) => {
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *15* (<@U00000000>)\n' +
+    'Lowest Score: *6* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
     '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *10* (<@U00000000>)\n' +
+    'Lowest Score: *10* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000001>: 4\n<@U00000002>: 3\n\n' +
+    '<@U00000005>: 1\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Highest Score: *15* (<@U00000000>)\n' +
+    'Lowest Score: *6* (<@U00000001>)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
     '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
 
@@ -379,4 +418,4 @@ test('Hide and Seek: Format stats', (assert) => {
     HideSeekGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
   );
   assert.end();
-});*/
+});
