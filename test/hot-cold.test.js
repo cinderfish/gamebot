@@ -11,11 +11,11 @@ const mockBot = {
     name: 'bobby',
     prefs: {},
     created: 1402463766,
-    manual_presence: 'active',
+    manual_presence: 'active'
   },
   message: (response) => {
     logger.info(response);
-  },
+  }
 };
 
 test('Hot / Cold: Should instantiate game', (assert) => {
@@ -53,7 +53,7 @@ test('Hot / Cold: Respond to guess', (assert) => {
 
   const guess = game.game.answer - 1;
   game.handleMessage({
-    text: guess,
+    text: guess
   }).then((response) => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
     assert.equal(response, `${guess} is Red Hot!`);
@@ -68,7 +68,7 @@ test('Hot / Cold: Respond to close guess', (assert) => {
 
   const guess = game.game.answer - 6;
   game.handleMessage({
-    text: guess,
+    text: guess
   }).then((response) => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
     assert.equal(response, `${guess} is Hot!`);
@@ -83,7 +83,7 @@ test('Hot / Cold: Respond to close guess', (assert) => {
 
   const guess = game.game.answer - 11;
   game.handleMessage({
-    text: guess,
+    text: guess
   }).then((response) => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
     assert.equal(response, `${guess} is Warm!`);
@@ -98,7 +98,7 @@ test('Hot / Cold: Respond to close-ish guess', (assert) => {
 
   const guess = game.game.answer - 21;
   game.handleMessage({
-    text: guess,
+    text: guess
   }).then((response) => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
     assert.equal(response, `${guess} is Cold!`);
@@ -113,7 +113,7 @@ test('Hot / Cold: Respond to way off guess', (assert) => {
 
   const guess = game.game.answer - 31;
   game.handleMessage({
-    text: guess,
+    text: guess
   }).then((response) => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
     assert.equal(response, `${guess} is Freezing Cold!`);
@@ -127,7 +127,7 @@ test('Hot / Cold: Ignore non-numeric answer', (assert) => {
   game.start();
 
   game.handleMessage({
-    text: 'foo',
+    text: 'foo'
   }).then(() => {
     assert.fail('Should not have gotten a response');
   });
@@ -140,7 +140,7 @@ test('Hot / Cold: Detect correct answer', (assert) => {
   const game = new HotColdGame.Game(lookup, mockBot, logger);
 
   game.start({
-    channel: 'foo',
+    channel: 'foo'
   }).then(() => {
     assert.pass('Game was completed');
   }).catch((err) => {
@@ -148,11 +148,11 @@ test('Hot / Cold: Detect correct answer', (assert) => {
   });
 
   game.handleMessage({
-    text: game.game.answer,
+    text: game.game.answer
   }, {
     profile: {
-      real_name: 'foo',
-    },
+      real_name: 'foo'
+    }
   }).then(() => {
     assert.equal(game.game.guesses, 1, 'Increment Guesses');
   });
@@ -166,7 +166,7 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
     start: 1461979341406,
     finish: 1461979371859,
     channel: 'C00000000',
-    originator: 'U00000000',
+    originator: 'U00000000'
   };
   const history = [lastPlay];
   const expectedStats = {
@@ -174,32 +174,32 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
       plays: 1,
       records: {
         longest: {
-          guesses: 5,
+          guesses: 5
         },
         shortest: {
-          guesses: 5,
-        },
+          guesses: 5
+        }
       },
       wins: [
-        { user: 'U00000000', wins: 1 },
-      ],
+        { user: 'U00000000', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
         plays: 1,
         records: {
           longest: {
-            guesses: 5,
+            guesses: 5
           },
           shortest: {
-            guesses: 5,
-          },
+            guesses: 5
+          }
         },
         wins: [
-          { user: 'U00000000', wins: 1 },
-        ],
-      },
-    },
+          { user: 'U00000000', wins: 1 }
+        ]
+      }
+    }
   };
 
   const game = new HotColdGame.Game(lookup, mockBot, logger);
@@ -218,40 +218,40 @@ test('Hot / Cold: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
           plays: 1,
           records: {
             longest: {
-              guesses: 5,
+              guesses: 5
             },
             shortest: {
-              guesses: 5,
-            },
+              guesses: 5
+            }
           },
           wins: [
-            { user: 'U00000000', wins: 1 },
-          ],
+            { user: 'U00000000', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
             plays: 1,
             records: {
               longest: {
-                guesses: 5,
+                guesses: 5
               },
               shortest: {
-                guesses: 5,
-              },
+                guesses: 5
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -259,42 +259,42 @@ test('Hot / Cold: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
           plays: 2,
           records: {
             longest: {
-              guesses: 5,
+              guesses: 5
             },
             shortest: {
-              guesses: 3,
-            },
+              guesses: 3
+            }
           },
           wins: [
             { user: 'U00000000', wins: 1 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
             plays: 2,
             records: {
               longest: {
-                guesses: 5,
+                guesses: 5
               },
               shortest: {
-                guesses: 3,
-              },
+                guesses: 3
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000001', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -302,56 +302,56 @@ test('Hot / Cold: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
           plays: 3,
           records: {
             longest: {
-              guesses: 7,
+              guesses: 7
             },
             shortest: {
-              guesses: 3,
-            },
+              guesses: 3
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
             plays: 2,
             records: {
               longest: {
-                guesses: 5,
+                guesses: 5
               },
               shortest: {
-                guesses: 3,
-              },
+                guesses: 3
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 1,
             records: {
               longest: {
-                guesses: 7,
+                guesses: 7
               },
               shortest: {
-                guesses: 7,
-              },
+                guesses: 7
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -359,57 +359,57 @@ test('Hot / Cold: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
           plays: 4,
           records: {
             longest: {
-              guesses: 7,
+              guesses: 7
             },
             shortest: {
-              guesses: 3,
-            },
+              guesses: 3
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
             plays: 2,
             records: {
               longest: {
-                guesses: 5,
+                guesses: 5
               },
               shortest: {
-                guesses: 3,
-              },
+                guesses: 3
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 2,
             records: {
               longest: {
-                guesses: 7,
+                guesses: 7
               },
               shortest: {
-                guesses: 7,
-              },
+                guesses: 7
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
-    },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
+    }
   ];
 
   const game = new HotColdGame.Game(lookup, mockBot, logger);
@@ -437,11 +437,11 @@ test('Hot / Cold: Format stats', (assert) => {
       plays: 22,
       records: {
         longest: {
-          guesses: 7,
+          guesses: 7
         },
         shortest: {
-          guesses: 3,
-        },
+          guesses: 3
+        }
       },
       wins: [
         { user: 'U00000000', wins: 7 },
@@ -449,26 +449,26 @@ test('Hot / Cold: Format stats', (assert) => {
         { user: 'U00000002', wins: 3 },
         { user: 'U00000003', wins: 2 },
         { user: 'U00000004', wins: 1 },
-        { user: 'U00000005', wins: 1 },
-      ],
+        { user: 'U00000005', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
         plays: 22,
         records: {
           longest: {
-            guesses: 7,
+            guesses: 7
           },
           shortest: {
-            guesses: 3,
-          },
+            guesses: 3
+          }
         },
         wins: [
           { user: 'U00000001', wins: 4 },
-          { user: 'U00000002', wins: 3 },
-        ],
-      },
-    },
+          { user: 'U00000002', wins: 3 }
+        ]
+      }
+    }
   };
 
   const noStatsFormat = `There are no stats for ${HotColdGame.config.name}! ` +

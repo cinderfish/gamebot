@@ -12,11 +12,11 @@ const mockBot = {
     name: 'bobby',
     prefs: {},
     created: 1402463766,
-    manual_presence: 'active',
+    manual_presence: 'active'
   },
   message: (response) => {
     logger.info(response);
-  },
+  }
 };
 
 test('Longest Word: Should instantiate game', (assert) => {
@@ -47,7 +47,7 @@ test('Longest Word: Check for valid word', (assert) => {
   const dictionaryapi = nock('http://www.dictionaryapi.com/')
     .get(`/api/v1/references/collegiate/xml/${word}`)
     .query({
-      key: process.env.DICTIONARY_KEY,
+      key: process.env.DICTIONARY_KEY
     })
     .reply(200, xmlResponse);
 
@@ -70,7 +70,7 @@ test('Longest Word: Check for invalid word', (assert) => {
   const dictionaryapi = nock('http://www.dictionaryapi.com/')
     .get(`/api/v1/references/collegiate/xml/${word}`)
     .query({
-      key: process.env.DICTIONARY_KEY,
+      key: process.env.DICTIONARY_KEY
     })
     .reply(200, xmlResponse);
 
@@ -94,7 +94,7 @@ test('Longest Word: Check for invalid XML', (assert) => {
   const dictionaryapi = nock('http://www.dictionaryapi.com/')
     .get(`/api/v1/references/collegiate/xml/${word}`)
     .query({
-      key: process.env.DICTIONARY_KEY,
+      key: process.env.DICTIONARY_KEY
     })
     .reply(200, xmlResponse);
 
@@ -115,7 +115,7 @@ test('Longest Word: Check for invalid response code', (assert) => {
   const dictionaryapi = nock('http://www.dictionaryapi.com/')
     .get(`/api/v1/references/collegiate/xml/${word}`)
     .query({
-      key: process.env.DICTIONARY_KEY,
+      key: process.env.DICTIONARY_KEY
     })
     .reply(500);
 
@@ -146,7 +146,7 @@ test('Longest Word: Should start/stop', (assert) => {
 });
 
 test('Longest Word: Should correctly find a match', (assert) => {
-  assert.plan(12);
+  assert.plan(11);
 
   const game = new LongestWordGame.Game(lookup, mockBot, logger);
   process.env.DICTIONARY_KEY = 'bar';
@@ -183,28 +183,28 @@ test('Longest Word: Should correctly find a match', (assert) => {
     apiCalls.push(nock('http://www.dictionaryapi.com/')
       .get(`/api/v1/references/collegiate/xml/${word}`)
       .query({
-        key: process.env.DICTIONARY_KEY,
+        key: process.env.DICTIONARY_KEY
       })
       .reply(200, word === winner ? xmlResponseGood : xmlResponseBad)
     );
 
     game.handleMessage({
-      text: word,
+      text: word
     }, {
       profile: {
-        real_name: 'foo',
-      },
+        real_name: 'foo'
+      }
     }).then(() => {
       assert.ok(game.game.words.has(word.toLowerCase()), `Guess ${word} should be accepted`);
     });
   });
 
   game.handleMessage({
-    text: '0000',
+    text: '0000'
   }, {
     profile: {
-      real_name: 'foo',
-    },
+      real_name: 'foo'
+    }
   }).then(() => {
     assert.notOk(game.game.words.has('0000'), 'Guess 0000 should NOT be accepted');
   });
@@ -218,7 +218,7 @@ test('Longest Word: Update stats creates initial stat', (assert) => {
     start: 1461979341406,
     finish: 1461979371859,
     channel: 'C00000000',
-    originator: 'U00000000',
+    originator: 'U00000000'
   };
   const history = [lastPlay];
   const expectedStats = {
@@ -227,16 +227,16 @@ test('Longest Word: Update stats creates initial stat', (assert) => {
       records: {
         longest: {
           word: 'foo',
-          user: 'U00000000',
+          user: 'U00000000'
         },
         shortest: {
           word: 'foo',
-          user: 'U00000000',
-        },
+          user: 'U00000000'
+        }
       },
       wins: [
-        { user: 'U00000000', wins: 1 },
-      ],
+        { user: 'U00000000', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
@@ -244,18 +244,18 @@ test('Longest Word: Update stats creates initial stat', (assert) => {
         records: {
           longest: {
             word: 'foo',
-            user: 'U00000000',
+            user: 'U00000000'
           },
           shortest: {
             word: 'foo',
-            user: 'U00000000',
-          },
+            user: 'U00000000'
+          }
         },
         wins: [
-          { user: 'U00000000', wins: 1 },
-        ],
-      },
-    },
+          { user: 'U00000000', wins: 1 }
+        ]
+      }
+    }
   };
 
   const game = new LongestWordGame.Game(lookup, mockBot, logger);
@@ -274,7 +274,7 @@ test('Longest Word: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -282,16 +282,16 @@ test('Longest Word: Update stats', (assert) => {
           records: {
             longest: {
               word: 'foo',
-              user: 'U00000000',
+              user: 'U00000000'
             },
             shortest: {
               word: 'foo',
-              user: 'U00000000',
-            },
+              user: 'U00000000'
+            }
           },
           wins: [
-            { user: 'U00000000', wins: 1 },
-          ],
+            { user: 'U00000000', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -299,19 +299,19 @@ test('Longest Word: Update stats', (assert) => {
             records: {
               longest: {
                 word: 'foo',
-                user: 'U00000000',
+                user: 'U00000000'
               },
               shortest: {
                 word: 'foo',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -319,7 +319,7 @@ test('Longest Word: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -327,17 +327,17 @@ test('Longest Word: Update stats', (assert) => {
           records: {
             longest: {
               word: 'fooo',
-              user: 'U00000001',
+              user: 'U00000001'
             },
             shortest: {
               word: 'foo',
-              user: 'U00000000',
-            },
+              user: 'U00000000'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 1 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -345,20 +345,20 @@ test('Longest Word: Update stats', (assert) => {
             records: {
               longest: {
                 word: 'fooo',
-                user: 'U00000001',
+                user: 'U00000001'
               },
               shortest: {
                 word: 'foo',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000001', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -366,7 +366,7 @@ test('Longest Word: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -374,17 +374,17 @@ test('Longest Word: Update stats', (assert) => {
           records: {
             longest: {
               word: 'fooo',
-              user: 'U00000001',
+              user: 'U00000001'
             },
             shortest: {
               word: 'foo',
-              user: 'U00000000',
-            },
+              user: 'U00000000'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -392,36 +392,36 @@ test('Longest Word: Update stats', (assert) => {
             records: {
               longest: {
                 word: 'fooo',
-                user: 'U00000001',
+                user: 'U00000001'
               },
               shortest: {
                 word: 'foo',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 1,
             records: {
               longest: {
                 word: 'baar',
-                user: 'U00000000',
+                user: 'U00000000'
               },
               shortest: {
                 word: 'baar',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -429,7 +429,7 @@ test('Longest Word: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -437,17 +437,17 @@ test('Longest Word: Update stats', (assert) => {
           records: {
             longest: {
               word: 'fooo',
-              user: 'U00000001',
+              user: 'U00000001'
             },
             shortest: {
               word: 'foo',
-              user: 'U00000000',
-            },
+              user: 'U00000000'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -455,37 +455,37 @@ test('Longest Word: Update stats', (assert) => {
             records: {
               longest: {
                 word: 'fooo',
-                user: 'U00000001',
+                user: 'U00000001'
               },
               shortest: {
                 word: 'foo',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 2,
             records: {
               longest: {
                 word: 'baar',
-                user: 'U00000000',
+                user: 'U00000000'
               },
               shortest: {
                 word: 'baar',
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
-    },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
+    }
   ];
 
   const game = new LongestWordGame.Game(lookup, mockBot, logger);
@@ -514,12 +514,12 @@ test('Longest Word: Format stats', (assert) => {
       records: {
         longest: {
           word: 'fooo',
-          user: 'U00000001',
+          user: 'U00000001'
         },
         shortest: {
           word: 'foo',
-          user: 'U00000000',
-        },
+          user: 'U00000000'
+        }
       },
       wins: [
         { user: 'U00000000', wins: 7 },
@@ -527,8 +527,8 @@ test('Longest Word: Format stats', (assert) => {
         { user: 'U00000002', wins: 3 },
         { user: 'U00000003', wins: 2 },
         { user: 'U00000004', wins: 1 },
-        { user: 'U00000005', wins: 1 },
-      ],
+        { user: 'U00000005', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
@@ -536,19 +536,19 @@ test('Longest Word: Format stats', (assert) => {
         records: {
           longest: {
             word: 'fooo',
-            user: 'U00000001',
+            user: 'U00000001'
           },
           shortest: {
             word: 'foo',
-            user: 'U00000000',
-          },
+            user: 'U00000000'
+          }
         },
         wins: [
           { user: 'U00000002', wins: 3 },
-          { user: 'U00000003', wins: 2 },
-        ],
-      },
-    },
+          { user: 'U00000003', wins: 2 }
+        ]
+      }
+    }
   };
 
   const noStatsFormat = `There are no stats for ${LongestWordGame.config.name}! ` +

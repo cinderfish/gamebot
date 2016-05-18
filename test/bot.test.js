@@ -22,17 +22,17 @@ test('Bot: should populate lookup', (assert) => {
   const bot = new Bot(configDist);
   const samplePayload = {
     users: [
-      { id: 1 }, { id: 2 },
+      { id: 1 }, { id: 2 }
     ],
     channels: [
-      { id: 3 }, { id: 4 },
+      { id: 3 }, { id: 4 }
     ],
     groups: [
-      { id: 5 }, { id: 6 },
+      { id: 5 }, { id: 6 }
     ],
     mpims: [
-      { id: 7 }, { id: 8 },
-    ],
+      { id: 7 }, { id: 8 }
+    ]
   };
 
   bot.populateLookup(samplePayload);

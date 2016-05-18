@@ -7,7 +7,7 @@ const FirebaseServer = require('firebase-server');
 let server = new FirebaseServer(5000, '127.0.1');
 
 const config = {
-  uri: 'ws://127.0.1:5000/unit-test/',
+  uri: 'ws://127.0.1:5000/unit-test/'
 };
 
 test('Storage/Firebase: Sets config', (assert) => {
@@ -20,23 +20,23 @@ test('Storage/Firebase: Delete a game', (assert) => {
   assert.plan(3);
   const game = 'delete-me';
   const play = {
-    foo: 'bar',
+    foo: 'bar'
   };
   const stats = {
-    foo: 'bar',
+    foo: 'bar'
   };
 
   const fb = new Firebase(config);
   Promise.all([
     fb.addPlay(game, play),
-    fb.setStats(game, stats),
+    fb.setStats(game, stats)
   ])
     .then(() => fb.deleteGame(game))
     .then((res) => {
       assert.ok(res, 'Delete should return truthy value');
       return Promise.all([
         fb.getStats(game),
-        fb.getHistory(game),
+        fb.getHistory(game)
       ]);
     })
     .then((res) => {
@@ -54,10 +54,10 @@ test('Storage/Firebase: Store/Retrieve Stats', (assert) => {
   assert.plan(4);
   const game = 'unit-test-1';
   const stats = {
-    foo: 'bar',
+    foo: 'bar'
   };
   const newStats = {
-    bar: 'foo',
+    bar: 'foo'
   };
 
   const fb = new Firebase(config);
@@ -87,7 +87,7 @@ test('Storage/Firebase: Store/Retrieve History', (assert) => {
   assert.plan(5);
   const game = 'unit-test-2';
   const play = {
-    foo: 'bar',
+    foo: 'bar'
   };
 
   const fb = new Firebase(config);
