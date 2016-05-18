@@ -5,7 +5,7 @@ const Memory = require(`${process.env.PWD}/lib/storage/Memory`);
 
 test('Storage/Memory: Sets config', (assert) => {
   const config = {
-    foo: 'bar',
+    foo: 'bar'
   };
 
   const mem = new Memory(config);
@@ -17,10 +17,10 @@ test('Storage/Memory: Store/Retrieve Stats', (assert) => {
   assert.plan(4);
   const game = 'foo';
   const stats = {
-    foo: 'bar',
+    foo: 'bar'
   };
   const newStats = {
-    bar: 'foo',
+    bar: 'foo'
   };
 
   const mem = new Memory();
@@ -47,7 +47,7 @@ test('Storage/Memory: Store/Retrieve History', (assert) => {
   assert.plan(5);
   const game = 'foo';
   const play = {
-    foo: 'bar',
+    foo: 'bar'
   };
 
   const mem = new Memory();
@@ -78,23 +78,23 @@ test('Storage/Memory: Delete a game', (assert) => {
   assert.plan(3);
   const game = 'foo';
   const play = {
-    foo: 'bar',
+    foo: 'bar'
   };
   const stats = {
-    foo: 'bar',
+    foo: 'bar'
   };
 
   const mem = new Memory();
   Promise.all([
     mem.addPlay(game, play),
-    mem.setStats(game, stats),
+    mem.setStats(game, stats)
   ])
     .then(() => mem.deleteGame(game))
     .then((res) => {
       assert.ok(res, 'Delete should return truthy value');
       return Promise.all([
         mem.getStats(game),
-        mem.getHistory(game),
+        mem.getHistory(game)
       ]);
     })
     .then((res) => {

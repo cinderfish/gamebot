@@ -11,11 +11,11 @@ const mockBot = {
     name: 'bobby',
     prefs: {},
     created: 1402463766,
-    manual_presence: 'active',
+    manual_presence: 'active'
   },
   message: (response) => {
     logger.info(response);
-  },
+  }
 };
 
 test('Math: Should instantiate game', (assert) => {
@@ -100,7 +100,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' },
+        profile: { real_name: 'foo' }
       });
     })
     .then((res) => {
@@ -129,7 +129,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' },
+        profile: { real_name: 'foo' }
       });
     })
     .then((res) => {
@@ -161,7 +161,7 @@ test('Math: Ask the correct number of questions', (assert) => {
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' },
+        profile: { real_name: 'foo' }
       });
     })
     .then((res) => {
@@ -172,7 +172,7 @@ test('Math: Ask the correct number of questions', (assert) => {
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' },
+        profile: { real_name: 'foo' }
       });
     })
     .then((res) => {
@@ -183,7 +183,7 @@ test('Math: Ask the correct number of questions', (assert) => {
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' },
+        profile: { real_name: 'foo' }
       });
     })
     .catch((err) => {
@@ -199,7 +199,7 @@ test('Math: Update stats creates initial stat', (assert) => {
     start: 1461979341406,
     finish: 1461979371859,
     channel: 'C00000000',
-    originator: 'U00000000',
+    originator: 'U00000000'
   };
   const history = [lastPlay];
   const expectedStats = {
@@ -208,16 +208,16 @@ test('Math: Update stats creates initial stat', (assert) => {
       records: {
         highest: {
           score: 15,
-          user: 'U00000000',
+          user: 'U00000000'
         },
         lowest: {
           score: 15,
-          user: 'U00000000',
-        },
+          user: 'U00000000'
+        }
       },
       wins: [
-        { user: 'U00000000', wins: 1 },
-      ],
+        { user: 'U00000000', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
@@ -225,18 +225,18 @@ test('Math: Update stats creates initial stat', (assert) => {
         records: {
           highest: {
             score: 15,
-            user: 'U00000000',
+            user: 'U00000000'
           },
           lowest: {
             score: 15,
-            user: 'U00000000',
-          },
+            user: 'U00000000'
+          }
         },
         wins: [
-          { user: 'U00000000', wins: 1 },
-        ],
-      },
-    },
+          { user: 'U00000000', wins: 1 }
+        ]
+      }
+    }
   };
 
   const game = new MathGame.Game(lookup, mockBot, logger);
@@ -255,7 +255,7 @@ test('Math: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -263,16 +263,16 @@ test('Math: Update stats', (assert) => {
           records: {
             highest: {
               score: 15,
-              user: 'U00000000',
+              user: 'U00000000'
             },
             lowest: {
               score: 15,
-              user: 'U00000000',
-            },
+              user: 'U00000000'
+            }
           },
           wins: [
-            { user: 'U00000000', wins: 1 },
-          ],
+            { user: 'U00000000', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -280,19 +280,19 @@ test('Math: Update stats', (assert) => {
             records: {
               highest: {
                 score: 15,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 15,
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -300,7 +300,7 @@ test('Math: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000000',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -308,17 +308,17 @@ test('Math: Update stats', (assert) => {
           records: {
             highest: {
               score: 15,
-              user: 'U00000000',
+              user: 'U00000000'
             },
             lowest: {
               score: 6,
-              user: 'U00000001',
-            },
+              user: 'U00000001'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 1 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -326,20 +326,20 @@ test('Math: Update stats', (assert) => {
             records: {
               highest: {
                 score: 15,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 6,
-                user: 'U00000001',
-              },
+                user: 'U00000001'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000001', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -347,7 +347,7 @@ test('Math: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -355,17 +355,17 @@ test('Math: Update stats', (assert) => {
           records: {
             highest: {
               score: 15,
-              user: 'U00000000',
+              user: 'U00000000'
             },
             lowest: {
               score: 6,
-              user: 'U00000001',
-            },
+              user: 'U00000001'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -373,36 +373,36 @@ test('Math: Update stats', (assert) => {
             records: {
               highest: {
                 score: 15,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 6,
-                user: 'U00000001',
-              },
+                user: 'U00000001'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 1,
             records: {
               highest: {
                 score: 10,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 10,
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
     },
     {
       play: {
@@ -410,7 +410,7 @@ test('Math: Update stats', (assert) => {
         start: 1461979341406,
         finish: 1461979371859,
         channel: 'C00000001',
-        originator: 'U00000000',
+        originator: 'U00000000'
       },
       expected: {
         global: {
@@ -418,17 +418,17 @@ test('Math: Update stats', (assert) => {
           records: {
             highest: {
               score: 15,
-              user: 'U00000000',
+              user: 'U00000000'
             },
             lowest: {
               score: 6,
-              user: 'U00000001',
-            },
+              user: 'U00000001'
+            }
           },
           wins: [
             { user: 'U00000000', wins: 2 },
-            { user: 'U00000001', wins: 1 },
-          ],
+            { user: 'U00000001', wins: 1 }
+          ]
         },
         channels: {
           C00000000: {
@@ -436,37 +436,37 @@ test('Math: Update stats', (assert) => {
             records: {
               highest: {
                 score: 15,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 6,
-                user: 'U00000001',
-              },
+                user: 'U00000001'
+              }
             },
             wins: [
               { user: 'U00000000', wins: 1 },
-              { user: 'U00000001', wins: 1 },
-            ],
+              { user: 'U00000001', wins: 1 }
+            ]
           },
           C00000001: {
             plays: 2,
             records: {
               highest: {
                 score: 10,
-                user: 'U00000000',
+                user: 'U00000000'
               },
               lowest: {
                 score: 10,
-                user: 'U00000000',
-              },
+                user: 'U00000000'
+              }
             },
             wins: [
-              { user: 'U00000000', wins: 1 },
-            ],
-          },
-        },
-      },
-    },
+              { user: 'U00000000', wins: 1 }
+            ]
+          }
+        }
+      }
+    }
   ];
 
   const game = new MathGame.Game(lookup, mockBot, logger);
@@ -495,12 +495,12 @@ test('Math: Format stats', (assert) => {
       records: {
         highest: {
           score: 15,
-          user: 'U00000000',
+          user: 'U00000000'
         },
         lowest: {
           score: 6,
-          user: 'U00000001',
-        },
+          user: 'U00000001'
+        }
       },
       wins: [
         { user: 'U00000000', wins: 7 },
@@ -508,8 +508,8 @@ test('Math: Format stats', (assert) => {
         { user: 'U00000002', wins: 3 },
         { user: 'U00000003', wins: 2 },
         { user: 'U00000004', wins: 1 },
-        { user: 'U00000005', wins: 1 },
-      ],
+        { user: 'U00000005', wins: 1 }
+      ]
     },
     channels: {
       C00000000: {
@@ -517,18 +517,18 @@ test('Math: Format stats', (assert) => {
         records: {
           highest: {
             score: 10,
-            user: 'U00000000',
+            user: 'U00000000'
           },
           lowest: {
             score: 10,
-            user: 'U00000001',
-          },
+            user: 'U00000001'
+          }
         },
         wins: [
-          { user: 'U00000005', wins: 1 },
-        ],
-      },
-    },
+          { user: 'U00000005', wins: 1 }
+        ]
+      }
+    }
   };
 
   const noStatsFormat = `There are no stats for ${MathGame.config.name}! ` +
