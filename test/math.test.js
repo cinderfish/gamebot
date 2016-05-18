@@ -167,7 +167,7 @@ test('Math: Ask the correct number of questions', (assert) => {
     .then((res) => {
       assert.equal(typeof res, 'string', 'Should return a response: turn 1');
       assert.notEqual(
-        game.game.question.solution, lastQuestion.solution, 'Should generate new question: turn 2'
+        game.game.question.question, lastQuestion.question, 'Should generate new question: turn 2'
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
@@ -178,7 +178,7 @@ test('Math: Ask the correct number of questions', (assert) => {
     .then((res) => {
       assert.equal(typeof res, 'string', 'Should return a response: turn 2');
       assert.notEqual(
-        game.game.question.solution, lastQuestion.solution, 'Should generate new question: turn 3'
+        game.game.question.question, lastQuestion.question, 'Should generate new question: turn 3'
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
