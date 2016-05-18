@@ -1,5 +1,5 @@
 # Slack Gamebot
-[![Build Status](https://travis-ci.org/shaunburdick/gamebot.svg?branch=master)](https://travis-ci.org/shaunburdick/gamebot) [![Coverage Status](https://coveralls.io/repos/github/shaunburdick/gamebot/badge.svg?branch=master)](https://coveralls.io/github/shaunburdick/gamebot?branch=master) [![Docker Pulls](https://img.shields.io/docker/pulls/shaunburdick/gamebot.svg?maxAge=2592000)](https://hub.docker.com/r/shaunburdick/gamebot/)
+[![Build Status](https://travis-ci.org/shaunburdick/gamebot.svg?branch=master)](https://travis-ci.org/shaunburdick/gamebot) [![Coverage Status](https://coveralls.io/repos/github/shaunburdick/gamebot/badge.svg?branch=master)](https://coveralls.io/github/shaunburdick/gamebot?branch=master) [![Docker Pulls](https://img.shields.io/docker/pulls/shaunburdick/gamebot.svg?maxAge=2592000)](https://hub.docker.com/r/shaunburdick/gamebot/) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg)](https://github.com/Flet/semistandard)
 
 A slack bot that plays games with you!
 
