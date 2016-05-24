@@ -22,7 +22,7 @@
     "type": "git",
     "url": "http://github.com/shaunburdick/gamebot.git"
   },
-  "license": "MIT",
+  "license": "GPL-3.0",
   "engine": {
     "node": "^5.1.0"
   },
