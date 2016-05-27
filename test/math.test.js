@@ -5,6 +5,14 @@ const MathGame = require(`${process.env.PWD}/lib/games/math`);
 const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
+
+lookup.set('U00000000', {real_name: 'Mock User 1'});
+lookup.set('U00000001', {real_name: 'Mock User 2'});
+lookup.set('U00000002', {real_name: 'Mock User 3'});
+lookup.set('U00000003', {real_name: 'Mock User 4'});
+lookup.set('U00000004', {real_name: 'Mock User 5'});
+lookup.set('U00000005', {real_name: 'Mock User 6'});
+
 const mockBot = {
   self: {
     id: 'U023BECGF',
@@ -536,31 +544,31 @@ test('Math: Format stats', (assert) => {
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *15* (<@U00000000>)\n' +
-    'Lowest Score: *6* (<@U00000001>)\n\n' +
+    'Highest Score: *15* (Mock User 1)\n' +
+    'Lowest Score: *6* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *10* (<@U00000000>)\n' +
-    'Lowest Score: *10* (<@U00000001>)\n\n' +
+    'Highest Score: *10* (Mock User 1)\n' +
+    'Lowest Score: *10* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000005>: 1\n\n' +
+    'Mock User 6: 1\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *15* (<@U00000000>)\n' +
-    'Lowest Score: *6* (<@U00000001>)\n\n' +
+    'Highest Score: *15* (Mock User 1)\n' +
+    'Lowest Score: *6* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   assert.equal(MathGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
   assert.equal(
-    MathGame.Game.formatStats(stats, 'C00000001'),
+    MathGame.Game.formatStats(stats, 'C00000001', lookup),
     nonChannelFormat, 'Format non-channel stats correctly'
   );
   assert.equal(
-    MathGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
+    MathGame.Game.formatStats(stats, 'C00000000', lookup), expectedFormat, 'Format stats correctly'
   );
   assert.end();
 });
