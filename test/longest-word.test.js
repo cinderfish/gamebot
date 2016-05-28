@@ -6,6 +6,14 @@ const LongestWordGame = require(`${process.env.PWD}/lib/games/longest-word`);
 const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
+
+lookup.set('U00000000', {real_name: 'Mock User 1'});
+lookup.set('U00000001', {real_name: 'Mock User 2'});
+lookup.set('U00000002', {real_name: 'Mock User 3'});
+lookup.set('U00000003', {real_name: 'Mock User 4'});
+lookup.set('U00000004', {real_name: 'Mock User 5'});
+lookup.set('U00000005', {real_name: 'Mock User 6'});
+
 const mockBot = {
   self: {
     id: 'U023BECGF',
@@ -556,31 +564,31 @@ test('Longest Word: Format stats', (assert) => {
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Longest Winning Word: *fooo* (<@U00000001>)\n' +
-    'Shortest Winning Word: *foo* (<@U00000000>)\n\n' +
+    'Longest Winning Word: *fooo* (Mock User 2)\n' +
+    'Shortest Winning Word: *foo* (Mock User 1)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Longest Winning Word: *fooo* (<@U00000001>)\n' +
-    'Shortest Winning Word: *foo* (<@U00000000>)\n\n' +
+    'Longest Winning Word: *fooo* (Mock User 2)\n' +
+    'Shortest Winning Word: *foo* (Mock User 1)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000002>: 3\n<@U00000003>: 2\n\n' +
+    'Mock User 3: 3\nMock User 4: 2\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Longest Winning Word: *fooo* (<@U00000001>)\n' +
-    'Shortest Winning Word: *foo* (<@U00000000>)\n\n' +
+    'Longest Winning Word: *fooo* (Mock User 2)\n' +
+    'Shortest Winning Word: *foo* (Mock User 1)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   assert.equal(LongestWordGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
   assert.equal(
-    LongestWordGame.Game.formatStats(stats, 'C00000001'),
+    LongestWordGame.Game.formatStats(stats, 'C00000001', lookup),
     nonChannelFormat, 'Format non-channel stats correctly'
   );
   assert.equal(
-    LongestWordGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
+    LongestWordGame.Game.formatStats(stats, 'C00000000', lookup), expectedFormat, 'Format stats correctly'
   );
   assert.end();
 });

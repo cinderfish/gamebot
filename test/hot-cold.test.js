@@ -5,6 +5,14 @@ const HotColdGame = require(`${process.env.PWD}/lib/games/hot-cold`);
 const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
+
+lookup.set('U00000000', {real_name: 'Mock User 1'});
+lookup.set('U00000001', {real_name: 'Mock User 2'});
+lookup.set('U00000002', {real_name: 'Mock User 3'});
+lookup.set('U00000003', {real_name: 'Mock User 4'});
+lookup.set('U00000004', {real_name: 'Mock User 5'});
+lookup.set('U00000005', {real_name: 'Mock User 6'});
+
 const mockBot = {
   self: {
     id: 'U023BECGF',
@@ -174,10 +182,12 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
       plays: 1,
       records: {
         longest: {
-          guesses: 5
+          guesses: 5,
+          user: 'U00000000'
         },
         shortest: {
-          guesses: 5
+          guesses: 5,
+          user: 'U00000000'
         }
       },
       wins: [
@@ -189,10 +199,12 @@ test('Hot / Cold: Update stats creates initial stat', (assert) => {
         plays: 1,
         records: {
           longest: {
-            guesses: 5
+            guesses: 5,
+            user: 'U00000000'
           },
           shortest: {
-            guesses: 5
+            guesses: 5,
+            user: 'U00000000'
           }
         },
         wins: [
@@ -225,10 +237,12 @@ test('Hot / Cold: Update stats', (assert) => {
           plays: 1,
           records: {
             longest: {
-              guesses: 5
+              guesses: 5,
+              user: 'U00000000'
             },
             shortest: {
-              guesses: 5
+              guesses: 5,
+              user: 'U00000000'
             }
           },
           wins: [
@@ -240,10 +254,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 1,
             records: {
               longest: {
-                guesses: 5
+                guesses: 5,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 5
+                guesses: 5,
+                user: 'U00000000'
               }
             },
             wins: [
@@ -266,10 +282,12 @@ test('Hot / Cold: Update stats', (assert) => {
           plays: 2,
           records: {
             longest: {
-              guesses: 5
+              guesses: 5,
+              user: 'U00000000'
             },
             shortest: {
-              guesses: 3
+              guesses: 3,
+              user: 'U00000001'
             }
           },
           wins: [
@@ -282,10 +300,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 2,
             records: {
               longest: {
-                guesses: 5
+                guesses: 5,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 3
+                guesses: 3,
+                user: 'U00000001'
               }
             },
             wins: [
@@ -309,10 +329,12 @@ test('Hot / Cold: Update stats', (assert) => {
           plays: 3,
           records: {
             longest: {
-              guesses: 7
+              guesses: 7,
+              user: 'U00000000'
             },
             shortest: {
-              guesses: 3
+              guesses: 3,
+              user: 'U00000001'
             }
           },
           wins: [
@@ -325,10 +347,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 2,
             records: {
               longest: {
-                guesses: 5
+                guesses: 5,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 3
+                guesses: 3,
+                user: 'U00000001'
               }
             },
             wins: [
@@ -340,10 +364,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 1,
             records: {
               longest: {
-                guesses: 7
+                guesses: 7,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 7
+                guesses: 7,
+                user: 'U00000000'
               }
             },
             wins: [
@@ -366,10 +392,12 @@ test('Hot / Cold: Update stats', (assert) => {
           plays: 4,
           records: {
             longest: {
-              guesses: 7
+              guesses: 7,
+              user: 'U00000000'
             },
             shortest: {
-              guesses: 3
+              guesses: 3,
+              user: 'U00000001'
             }
           },
           wins: [
@@ -382,10 +410,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 2,
             records: {
               longest: {
-                guesses: 5
+                guesses: 5,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 3
+                guesses: 3,
+                user: 'U00000001'
               }
             },
             wins: [
@@ -397,10 +427,12 @@ test('Hot / Cold: Update stats', (assert) => {
             plays: 2,
             records: {
               longest: {
-                guesses: 7
+                guesses: 7,
+                user: 'U00000000'
               },
               shortest: {
-                guesses: 7
+                guesses: 7,
+                user: 'U00000000'
               }
             },
             wins: [
@@ -437,10 +469,12 @@ test('Hot / Cold: Format stats', (assert) => {
       plays: 22,
       records: {
         longest: {
-          guesses: 7
+          guesses: 7,
+          user: 'U00000000'
         },
         shortest: {
-          guesses: 3
+          guesses: 3,
+          user: 'U00000001'
         }
       },
       wins: [
@@ -457,10 +491,12 @@ test('Hot / Cold: Format stats', (assert) => {
         plays: 22,
         records: {
           longest: {
-            guesses: 7
+            guesses: 7,
+            user: 'U00000000'
           },
           shortest: {
-            guesses: 3
+            guesses: 3,
+            user: 'U00000001'
           }
         },
         wins: [
@@ -476,31 +512,31 @@ test('Hot / Cold: Format stats', (assert) => {
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Most Guesses: *7* (Mock User 1)\n' +
+    'Least Guesses: *3* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Most Guesses: *7* (Mock User 1)\n' +
+    'Least Guesses: *3* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000001>: 4\n<@U00000002>: 3\n\n' +
+    'Mock User 2: 4\nMock User 3: 3\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Most Guesses: *7*\n' +
-    'Least Guesses: *3*\n\n' +
+    'Most Guesses: *7* (Mock User 1)\n' +
+    'Least Guesses: *3* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   assert.equal(HotColdGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
   assert.equal(
-    HotColdGame.Game.formatStats(stats, 'C00000001'),
+    HotColdGame.Game.formatStats(stats, 'C00000001', lookup),
     nonChannelFormat, 'Format non-channel stats correctly'
   );
   assert.equal(
-    HotColdGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
+    HotColdGame.Game.formatStats(stats, 'C00000000', lookup), expectedFormat, 'Format stats correctly'
   );
   assert.end();
 });

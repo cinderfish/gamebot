@@ -5,6 +5,14 @@ const MathGame = require(`${process.env.PWD}/lib/games/math`);
 const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
+
+lookup.set('U00000000', {real_name: 'Mock User 1'});
+lookup.set('U00000001', {real_name: 'Mock User 2'});
+lookup.set('U00000002', {real_name: 'Mock User 3'});
+lookup.set('U00000003', {real_name: 'Mock User 4'});
+lookup.set('U00000004', {real_name: 'Mock User 5'});
+lookup.set('U00000005', {real_name: 'Mock User 6'});
+
 const mockBot = {
   self: {
     id: 'U023BECGF',
@@ -27,7 +35,7 @@ test('Math: Should instantiate game', (assert) => {
 
 test('Math: Add Winners', (assert) => {
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
 
   game.addWinner(userId, 1);
   assert.equal(game.winners.get(userId), 1, 'Instantiate winner');
@@ -89,7 +97,7 @@ test('Math: Ignore non-number answers', (assert) => {
 test('Math: Respond to correct answer', (assert) => {
   assert.plan(5);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
   let initialQuestion;
 
   game.start(mockBot.self);
@@ -100,7 +108,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' }
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -118,7 +126,7 @@ test('Math: Respond to correct answer', (assert) => {
 test('Math: Respond to correct answer', (assert) => {
   assert.plan(5);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
   let initialQuestion;
 
   game.start(mockBot.self);
@@ -129,7 +137,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' }
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -147,7 +155,8 @@ test('Math: Respond to correct answer', (assert) => {
 test('Math: Ask the correct number of questions', (assert) => {
   assert.plan(7);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId1 = 'U00000000';
+  const userId2 = 'U00000001';
   let lastQuestion;
 
   game.start(mockBot.self)
@@ -160,8 +169,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       assert.equal(game.game.turns, 3, 'Turns is set to 3');
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId1,
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -171,8 +180,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId1,
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -182,8 +191,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId2,
+        profile: { real_name: 'Mock User 2' }
       });
     })
     .catch((err) => {
@@ -536,31 +545,31 @@ test('Math: Format stats', (assert) => {
 
   const nonChannelFormat = '\n\n*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *15* (<@U00000000>)\n' +
-    'Lowest Score: *6* (<@U00000001>)\n\n' +
+    'Highest Score: *15* (Mock User 1)\n' +
+    'Lowest Score: *6* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   const expectedFormat = '*<#C00000000> Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *10* (<@U00000000>)\n' +
-    'Lowest Score: *10* (<@U00000001>)\n\n' +
+    'Highest Score: *10* (Mock User 1)\n' +
+    'Lowest Score: *10* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000005>: 1\n\n' +
+    'Mock User 6: 1\n\n' +
     '*Global Stats:*\n' +
     'Plays: *22*\n' +
-    'Highest Score: *15* (<@U00000000>)\n' +
-    'Lowest Score: *6* (<@U00000001>)\n\n' +
+    'Highest Score: *15* (Mock User 1)\n' +
+    'Lowest Score: *6* (Mock User 2)\n\n' +
     '*Top 5:*\n--------------------------------------------------\n\n' +
-    '<@U00000000>: 7\n<@U00000001>: 4\n<@U00000002>: 3\n<@U00000003>: 2\n<@U00000004>: 1';
+    'Mock User 1: 7\nMock User 2: 4\nMock User 3: 3\nMock User 4: 2\nMock User 5: 1';
 
   assert.equal(MathGame.Game.formatStats({}), noStatsFormat, 'Show message when no stats');
   assert.equal(
-    MathGame.Game.formatStats(stats, 'C00000001'),
+    MathGame.Game.formatStats(stats, 'C00000001', lookup),
     nonChannelFormat, 'Format non-channel stats correctly'
   );
   assert.equal(
-    MathGame.Game.formatStats(stats, 'C00000000'), expectedFormat, 'Format stats correctly'
+    MathGame.Game.formatStats(stats, 'C00000000', lookup), expectedFormat, 'Format stats correctly'
   );
   assert.end();
 });
