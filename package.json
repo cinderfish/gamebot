@@ -1,6 +1,6 @@
 {
   "name": "gamebot",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Slackbot for playing games",
   "main": "app.js",
   "private": true,
