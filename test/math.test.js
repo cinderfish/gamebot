@@ -35,7 +35,7 @@ test('Math: Should instantiate game', (assert) => {
 
 test('Math: Add Winners', (assert) => {
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
 
   game.addWinner(userId, 1);
   assert.equal(game.winners.get(userId), 1, 'Instantiate winner');
@@ -97,7 +97,7 @@ test('Math: Ignore non-number answers', (assert) => {
 test('Math: Respond to correct answer', (assert) => {
   assert.plan(5);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
   let initialQuestion;
 
   game.start(mockBot.self);
@@ -108,7 +108,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' }
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -126,7 +126,7 @@ test('Math: Respond to correct answer', (assert) => {
 test('Math: Respond to correct answer', (assert) => {
   assert.plan(5);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId = 'U00000000';
   let initialQuestion;
 
   game.start(mockBot.self);
@@ -137,7 +137,7 @@ test('Math: Respond to correct answer', (assert) => {
       initialQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
         id: userId,
-        profile: { real_name: 'foo' }
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -155,7 +155,8 @@ test('Math: Respond to correct answer', (assert) => {
 test('Math: Ask the correct number of questions', (assert) => {
   assert.plan(7);
   const game = new MathGame.Game(lookup, mockBot, logger);
-  const userId = 'foo';
+  const userId1 = 'U00000000';
+  const userId2 = 'U00000001';
   let lastQuestion;
 
   game.start(mockBot.self)
@@ -168,8 +169,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       assert.equal(game.game.turns, 3, 'Turns is set to 3');
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId1,
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -179,8 +180,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId1,
+        profile: { real_name: 'Mock User 1' }
       });
     })
     .then((res) => {
@@ -190,8 +191,8 @@ test('Math: Ask the correct number of questions', (assert) => {
       );
       lastQuestion = game.game.question;
       return game.handleMessage({ text: game.game.question.solution }, {
-        id: userId,
-        profile: { real_name: 'foo' }
+        id: userId2,
+        profile: { real_name: 'Mock User 2' }
       });
     })
     .catch((err) => {
