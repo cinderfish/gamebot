@@ -37,3 +37,6 @@ config.js
 
 # nyc
 .nyc_output
+
+# file storage
+data/

@@ -13,6 +13,13 @@ const config = {
 test('Storage/Firebase: Sets config', (assert) => {
   const fb = new Firebase(config);
   assert.deepEqual(fb.config, config, 'Config should be set in new class');
+
+  try {
+    const failFB = new Firebase();
+    assert.notOk(failFB, 'Should throw error if config is not set');
+  } catch (err) {
+    assert.ok(err, 'Should throw error if config is not set');
+  }
   assert.end();
 });
 
