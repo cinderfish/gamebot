@@ -6,8 +6,8 @@ ENV NODE_ENV=production \
     DICTIONARY_KEY= \
     SLACK_TOKEN= \
     SLACK_AUTO_RECONNECT= \
-    STORAGE_TYPE = \
-    STORAGE_CONFIG
+    STORAGE_TYPE= \
+    STORAGE_CONFIG=
 
 ADD . /usr/src/myapp
 
