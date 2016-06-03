@@ -6,12 +6,70 @@ const logger = require(`${process.env.PWD}/lib/logger`)();
 
 const lookup = new Map();
 
-lookup.set('U00000000', {real_name: 'Mock User 1'});
-lookup.set('U00000001', {real_name: 'Mock User 2'});
-lookup.set('U00000002', {real_name: 'Mock User 3'});
-lookup.set('U00000003', {real_name: 'Mock User 4'});
-lookup.set('U00000004', {real_name: 'Mock User 5'});
-lookup.set('U00000005', {real_name: 'Mock User 6'});
+const channelOne = {
+  id: 'C00000000',
+  is_channel: true,
+  is_member: true,
+  is_archived: false,
+  name: 'Mock Channel 1'
+};
+
+const channelTwo = {
+  id: 'C00000001',
+  is_channel: true,
+  is_member: true,
+  is_archived: false,
+  name: 'Mock Channel 2'
+};
+
+const channelThree = {
+  id: 'C00000002',
+  is_channel: true,
+  is_member: false,
+  is_archived: false,
+  name: 'Mock Channel 3'
+};
+
+const channelFour = {
+  id: 'C00000003',
+  is_channel: true,
+  is_member: true,
+  is_archived: true,
+  name: 'Mock Channel 4'
+};
+
+const channelFive = {
+  id: 'C00000003',
+  is_channel: true,
+  is_member: true,
+  is_archived: false,
+  name: 'Mock Channel 4'
+};
+
+lookup.set('C00000000', channelOne);
+lookup.set('C00000001', channelTwo);
+lookup.set('C00000002', channelThree);
+lookup.set('C00000003', channelFour);
+
+lookup.set('U00000000', {id: 'U00000000', name: 'User 1', real_name: 'Mock User 1', profile: {first_name: 'User 1'}});
+lookup.set('U00000001', {id: 'U00000001', name: 'User 2', real_name: 'Mock User 2'});
+lookup.set('U00000002', {id: 'U00000002', name: 'User 3', real_name: 'Mock User 3'});
+lookup.set('U00000003', {id: 'U00000003', name: 'User 4', real_name: 'Mock User 4'});
+lookup.set('U00000004', {id: 'U00000004', name: 'User 5', real_name: 'Mock User 5'});
+lookup.set('U00000005', {id: 'U00000005', name: 'User 6', real_name: 'Mock User 6'});
+
+const lookupThreeChannels = new Map();
+
+lookupThreeChannels.set('C00000000', channelOne);
+lookupThreeChannels.set('C00000001', channelTwo);
+lookupThreeChannels.set('C00000002', channelThree);
+lookupThreeChannels.set('C00000003', channelFour);
+lookupThreeChannels.set('C00000004', channelFive);
+
+lookupThreeChannels.set('U00000000', {id: 'U00000000', name: 'User 1', real_name: 'Mock User 1'});
+lookupThreeChannels.set('U00000001', {id: 'U00000001', name: 'User 2', real_name: 'Mock User 2'});
+
+const lookupNoChannels = new Map();
 
 const mockBot = {
   self: {
@@ -27,10 +85,266 @@ const mockBot = {
 };
 
 test('Hide and Seek: Should instantiate game', (assert) => {
+  assert.plan(2);
+
   const game = new HideSeekGame.Game(lookup, mockBot, logger);
   assert.ok(game);
   assert.deepEqual(game.bot, mockBot, 'Mock bot stored as bot');
   assert.end();
+});
+
+test('Hide and Seek: Should set turns left', (assert) => {
+  assert.plan(2);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start();
+  assert.ok(game);
+  // There are 4 mock channels, one archived, one not a member of.  Leaving
+  // two valid channels.  On `start()`, the bot calls `hide` which decrements
+  // the turns left so should check for one less than valid number of channels
+  assert.equal(game.game.turnsLeft, 1, 'Turns left set correctly');
+  assert.end();
+});
+
+test('Hide and Seek: Should set starting channel', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'});
+  assert.equal(game.game.startingChannelId, 'C00000000', 'Starting ChannelID set correctly');
+  assert.end();
+});
+
+test('Hide and Seek: Hiding Channel should be one of the available channels', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'});
+  const isValid = ['C00000000', 'C00000001'].indexOf(game.game.hidingIn.id) > -1;
+  assert.equal(isValid, true, 'Hiding in valid channel');
+  assert.end();
+});
+
+test('Hide and Seek: Doesn\'t respond to mention when not running', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.handleMessage({}).then((response) => {
+    assert.equal(response, true, 'Valid response from game');
+  });
+});
+
+test('Hide and Seek: Return correct winner for one guesser', (assert) => {
+  assert.plan(2);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((response) => {
+    assert.equal(response.winner, 'U00000000', 'Correct winner chosen');
+    assert.equal(response.score, 2, 'Correct winner score returned');
+    assert.end();
+  });
+  let channel = lookup.get(game.game.hidingIn.id);
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: channel.id,
+    user: 'U00000000'
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000000'
+    });
+  });
+});
+
+test('Hide and Seek: Return correct winner in the event of a tie (FIFO)', (assert) => {
+  assert.plan(2);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((response) => {
+    assert.equal(response.winner, 'U00000001', 'Correct winner chosen');
+    assert.equal(response.score, 1, 'Correct winner score returned');
+    assert.end();
+  });
+  let channel = lookup.get(game.game.hidingIn.id);
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: channel.id,
+    user: 'U00000001'
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000000'
+    });
+  });
+});
+
+test('Hide and Seek: Return winner if first guesser has more guesses', (assert) => {
+  assert.plan(2);
+
+  const game = new HideSeekGame.Game(lookupThreeChannels, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((response) => {
+    assert.equal(response.winner, 'U00000001', 'Correct winner chosen');
+    assert.equal(response.score, 2, 'Correct winner score returned');
+    assert.end();
+  });
+  let channel = lookup.get(game.game.hidingIn.id);
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: channel.id,
+    user: 'U00000001'
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000001'
+    });
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000000'
+    });
+  });
+});
+
+test('Hide and Seek: Return winner if second guesser has more guesses', (assert) => {
+  assert.plan(2);
+
+  const game = new HideSeekGame.Game(lookupThreeChannels, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((response) => {
+    assert.equal(response.winner, 'U00000001', 'Correct winner chosen');
+    assert.equal(response.score, 2, 'Correct winner score returned');
+    assert.end();
+  });
+  let channel = lookup.get(game.game.hidingIn.id);
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: channel.id,
+    user: 'U00000000'
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000001'
+    });
+  }).then(() => {
+    channel = lookup.get(game.game.hidingIn.id);
+    return game.handleMessage({
+      type: 'message',
+      event: 'direct_mention',
+      channel: channel.id,
+      user: 'U00000001'
+    });
+  });
+});
+
+test('Hide and Seek: Should end game if hiding with no turns left', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((response) => {
+    assert.pass('Game ended');
+  });
+
+  let channel = lookup.get(game.game.hidingIn.id);
+
+  // Simulate an erroneous turns left counter
+  game.game.turnsLeft--;
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: channel.id,
+    user: 'U00000000'
+  });
+});
+
+test('Hide and Seek: Should respond if unexpected message type sent', (assert) => {
+  assert.plan(3);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'});
+
+  game.handleMessage({
+    type: 'message',
+    event: 'foo'
+  }).then((res) => {
+    assert.equal(res.found, false, 'Correct found value returned');
+    assert.equal(res.user, null, 'Correct user value returned');
+    assert.equal(res.gameOver, false, 'Correct game status value returned');
+  });
+});
+
+test('Hide and Seek: Should respond with appropriate message wrong channel chosen', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'});
+
+  // Manually Set the hiding channel
+  game.game.hidingIn = 'C00000000';
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: 'C00000001',
+    user: 'U00000000'
+  }).then((res) => {
+    assert.equal(res.found, false, 'Correct found value returned');
+  });
+});
+
+test('Hide and Seek: Should respond with error if playing but not hiding', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookup, mockBot, logger);
+  game.start({channel: 'C00000000'});
+
+  // Manually Set the hiding channel
+  game.game.hidingIn = null;
+
+  game.handleMessage({
+    type: 'message',
+    event: 'direct_mention',
+    channel: 'C00000001',
+    user: 'U00000000'
+  }).then((res) => {
+    assert.fail('Unexpected response');
+  }).catch((err) => {
+    const expectedErr = 'Something went wrong, the game is running but bot is not hiding';
+    assert.equal(err, expectedErr, 'Received correct error message');
+  });
+});
+
+test('Hide and Seek: Should reject game when it cannot hide', (assert) => {
+  assert.plan(1);
+
+  const game = new HideSeekGame.Game(lookupNoChannels, mockBot, logger);
+  game.start({channel: 'C00000000'}).then((res) => {
+    assert.fail('Unexpected response');
+  }).catch((err) => {
+    assert.equal(err, 'Could not hide', 'Received correct error message');
+  });
 });
 
 test('Hide and Seek: Show Help', (assert) => {
